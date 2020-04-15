@@ -3,6 +3,7 @@ from secrets import get_secret
 
 from google.cloud import datastore
 import sentry_sdk
+from sentry_sdk.integrations.serverless import serverless_function
 
 kind = "Timetable"
 
@@ -15,6 +16,7 @@ with sentry_sdk.configure_scope() as scope:
 
 client = datastore.Client()
 
+@serverless_function
 def remove_timetable(data, context):
     date = format_date(get_monday())
     key = client.key(kind, date)

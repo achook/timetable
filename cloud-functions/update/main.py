@@ -4,6 +4,7 @@ from config import get_config
 
 from google.cloud import datastore
 import sentry_sdk
+from sentry_sdk.integrations.serverless import serverless_function
 
 sentry_url = get_secret("SENTRY_URL")
 
@@ -17,6 +18,7 @@ password = get_config('PASSWORD')
 kind = 'Timetable'
 client = datastore.Client()
 
+@serverless_function
 def update_timetable(data, context):
     timetables = get_timetables(username, password, 4)
     

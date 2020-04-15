@@ -3,9 +3,10 @@ from secrets import get_secret
 
 from flask import Flask, request, jsonify
 import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 sentry_url = get_secret('SENTRY_URL')
-sentry_sdk.init(sentry_url)
+sentry_sdk.init(sentry_url, integrations=[FlaskIntegration()])
 with sentry_sdk.configure_scope() as scope:
     scope.set_tag('service', 'api')
 

@@ -1,0 +1,5 @@
+dispatch:
+  - url: plan.karol.site/*
+    service: default
+  - url: api.plan.karol.site/*
+    service: api

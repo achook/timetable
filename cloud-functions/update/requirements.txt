@@ -1,0 +1,5 @@
+configcat-client==4.0.1
+google-cloud-datastore==1.9.0
+google-cloud-secret-manager==0.2.0
+requests==2.22.0
+sentry-sdk==0.14.2

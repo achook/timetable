@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+cd remove
+gcloud functions deploy removeTimetable --runtime python37 --entry-point remove_timetable --trigger-topic remove --region europe-west1
+
+cd ..
+
+cd update
+gcloud functions deploy updateTimetable --runtime python37 --entry-point update_timetable --trigger-topic update --region europe-west1

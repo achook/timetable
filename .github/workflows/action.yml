@@ -1,0 +1,13 @@
+on: push
+name: Push Workflow
+jobs:
+  ConfigCatFeatureFlagCleanup:
+    name: ConfigCat Feature Flag Cleanup
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: ConfigCat Feature Flag Cleanup
+      uses: configcat/github-action-feature-flag-cleanup@1.0.0
+      with:
+        configcat-sdk-key: ${{ secrets.CONFIGCAT_KEY }}
+        fail-on-warnings: false

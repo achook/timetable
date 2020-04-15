@@ -1,4 +1,4 @@
-from librus import get_timetables, format_date, get_monday, LibrusNotAvailible
+from librus import get_timetables, format_date, get_monday
 from secrets import get_secret
 from config import get_config
 

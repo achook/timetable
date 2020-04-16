@@ -1,4 +1,4 @@
-from librus import get_timetables, format_date, get_monday
+from librus import get_timetables, format_date, get_monday, LibrusNotAvailible
 from secrets import get_secret
 from config import get_config
 
@@ -20,7 +20,13 @@ client = datastore.Client()
 
 @serverless_function
 def update_timetable(data, context):
-    timetables = get_timetables(username, password, 4)
+    timetables = None
+
+    try:
+        timetables = get_timetables(username, password, 4)
+    except LibrusNotAvailible as err:
+        print(f'An error occured when connecting to Librus: {err}')
+        return
     
     entities = []
 

@@ -1,5 +1,5 @@
 dispatch:
-  - url: plan.karol.site/*
+  - url: plan.achook.dev/*
     service: default
-  - url: api.plan.karol.site/*
+  - url: api.plan.achook.dev/*
     service: api

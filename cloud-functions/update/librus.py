@@ -3,6 +3,7 @@ from config import get_config
 import requests
 import datetime
 import json
+import re
 
 REDIRECT_URL = 'http://localhost/bar'
 LOGIN_URL = 'https://portal.librus.pl/rodzina/login/action'
@@ -66,9 +67,8 @@ def get_token(username: str, password: str) -> str:
     if csrf_sess.status_code != 200:
         raise LibrusNotAvailible(f'Unable to get csrf token, server responded with {csrf_sess.status_code}')
 
-    csrf_token = csrf_sess.text[
-                 csrf_sess.text.find('name="csrf-token" content="') + 27:csrf_sess.text.find('name="csrf-token" content="') + 67
-    ]
+    csrf_match = re.search(r'<meta name="csrf-token" content="(\w+)">', csrf_sess.text, flags=re.MULTILINE)
+    csrf_token = csrf_match.group(1)
 
     login_response_redir = auth_session.post(
         LOGIN_URL,

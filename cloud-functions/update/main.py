@@ -22,11 +22,7 @@ client = datastore.Client()
 def update_timetable(data, context):
     timetables = None
 
-    try:
-        timetables = get_timetables(username, password, 4)
-    except LibrusNotAvailible as err:
-        print(f'An error occured when connecting to Librus: {err}')
-        return
+    timetables = get_timetables(username, password, 4)
     
     entities = []
 

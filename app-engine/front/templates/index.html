@@ -34,7 +34,7 @@
   {% endif %}
 
     <h1 class="title">Lekcje {{ date }}</h1>
-    <h2 class="hours">{{ time }}</h2>
+    <h2 class="hours">{{ time | safe }}</h2>
 
     <main class="timetable">
       {% for class in classes %}

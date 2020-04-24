@@ -23,7 +23,7 @@ def root():
 
     if timetable and timetable['beginning']:
         classes = timetable['classes']
-        time = f'{timetable["beginning"]} - {timetable["end"]}' 
+        time = f'{timetable["beginning"]} &ndash; {timetable["end"]}' 
 
     dark = is_night()
     

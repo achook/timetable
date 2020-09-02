@@ -5,7 +5,7 @@ import datetime
 import json
 import re
 
-REDIRECT_URL = 'http://localhost/bar'
+REDIRECT_URL = 'app://librus'
 LOGIN_URL = 'https://portal.librus.pl/rodzina/login/action'
 OAUTH_URL = 'https://portal.librus.pl/oauth2/access_token'
 SYNERGIA_URL = 'https://portal.librus.pl/api/v2/SynergiaAccounts'
@@ -69,12 +69,14 @@ def get_token(username: str, password: str) -> str:
 
     csrf_match = re.search(r'<meta name="csrf-token" content="(\w+)">', csrf_sess.text, flags=re.MULTILINE)
     csrf_token = csrf_match.group(1)
+    xsrf_token = auth_session.cookies.get('XSRF-TOKEN')
 
     login_response_redir = auth_session.post(
         LOGIN_URL,
         data=json.dumps({'email': username, 'password': password}),
-        headers={'X-CSRF-TOKEN': csrf_token, 'Content-Type': 'application/json'}
+        headers={'X-CSRF-TOKEN': csrf_token, 'Content-Type': 'application/json', 'X-XSRF-TOKEN': xsrf_token}
     )
+
     if login_response_redir.status_code == 403:
         raise LibrusNotAvailible(login_response_redir.json()['errors'][0])
     elif login_response_redir.status_code != 200:
@@ -82,20 +84,21 @@ def get_token(username: str, password: str) -> str:
 
     redir_addr = login_response_redir.json()['redirect']
     
-    access_code_sess = auth_session.get(redir_addr, allow_redirects=False)
+    access_code_sess = auth_session.get(redir_addr, allow_redirects=False, headers={'X-Requested-With': 'pl.librus.synergiaDru2'})
     if access_code_sess.status_code != 302:
         raise LibrusNotAvailible(f'Unable to get access code, server responded with {access_code_sess.status_code} instead of 302')
-    access_code = access_code_sess.headers['location'][26:]
+    access_code = access_code_sess.headers['location'][18:]
 
     token_sess = auth_session.post(
         OAUTH_URL,
         data={
             'grant_type': 'authorization_code',
-            'code': access_code,
             'client_id': client_id,
-            'redirect_uri': REDIRECT_URL
+            'redirect_uri': REDIRECT_URL,
+            'code': access_code
         }
     )
+
     if token_sess.status_code != 200:
         raise LibrusNotAvailible(f'Unable to get access token, server responded with {token_sess.status_code}')
 
